@@ -10,6 +10,7 @@ export const TodoList = () => {
     <>
       <ul>
         {filteredData.map((todo,idx) => {
+          const isCompleted = todo.completed;
           return (
             <li
               key={todo.id}
@@ -17,7 +18,7 @@ export const TodoList = () => {
             >
               <div className="flex gap-2">
                 <button onClick={() => handleCompletedTask(todo.id)}>
-                  {todo.completed ? (
+                  {isCompleted ? (
                     <RiCheckboxCircleLine size={25} />
                   ) : (
                     <RiCheckboxBlankCircleLine size={25} />
@@ -25,7 +26,7 @@ export const TodoList = () => {
                   )}
                 </button>
 
-                {todo.task}
+               <span className={isCompleted ? `line-through`: ""}> {todo.task}</span>
               </div>
               <button onClick={()=> handleDeleteTask(idx)}>
                 <MdDelete size={25} />
