@@ -14,17 +14,22 @@ export type TodosContext = {
   todos: Todo[];
   handleAddTask: (task: string) => void;
   handleCompletedTask: (id: string) => void;
-  handleDeleteTask: (idx:number) => void;
+  handleDeleteTask: (idx: number) => void;
 };
 
 // context
 export const todoscontext = createContext<TodosContext | null>(null);
 
-
 //Provider
 export const TodosProvider = ({ children }: TodosProviderProps) => {
-
-  const [todos, setTodos] = useState<Todo[]>([]);
+  const [todos, setTodos] = useState<Todo[]>(()=>{
+    try {
+      const newTodos = localStorage.getItem("todos") || "[]"
+      return JSON.parse(newTodos) as Todo[]
+    } catch (error) {
+      return []
+    }
+  });
 
   const handleAddTask = (task: string) => {
     setTodos((prev) => {
@@ -37,39 +42,45 @@ export const TodosProvider = ({ children }: TodosProviderProps) => {
         },
         ...prev,
       ];
+      localStorage.setItem("todos", JSON.stringify(newTodos));
       return newTodos;
-      
     });
-    
   };
 
-  const handleCompletedTask = (id:string) =>{
-    setTodos((prev)=>
-      prev.map((todo)=>
-        todo.id === id ? {...todo, completed: !todo.completed} : todo
-      )
-    )
-  } 
+  const handleCompletedTask = (id: string) => {
+    setTodos((prev) => {
+      const newTodos = prev.map((todo) =>
+        todo.id === id ? { ...todo, completed: !todo.completed } : todo
+      );
+      
+      localStorage.setItem("todos", JSON.stringify(newTodos));
+      return newTodos;
+    });
+  };
 
-  const handleDeleteTask = (idx:number) => {
-    setTodos(todos.filter((_,i)=> i !== idx))
-  }
-  
+  const handleDeleteTask = (idx: number) => {
+    setTodos((prev)=>{
+      const newTodos = prev.filter((_,i)=> i !== idx);
+      localStorage.setItem("todos",JSON.stringify(newTodos));
+      return newTodos;
+    });
+  };
 
   return (
-    <todoscontext.Provider value={{ todos, handleAddTask, handleCompletedTask, handleDeleteTask }}>
+    <todoscontext.Provider
+      value={{ todos, handleAddTask, handleCompletedTask, handleDeleteTask }}
+    >
       {children}
     </todoscontext.Provider>
   );
 };
 
-
 // consumer
 
-export const useTodos = () =>{
-    const todosConsumer = useContext(todoscontext);
-    if(!todosConsumer){
-        throw new Error("useTodos used outside of Provider");
-    }
-    return todosConsumer;
-}
+export const useTodos = () => {
+  const todosConsumer = useContext(todoscontext);
+  if (!todosConsumer) {
+    throw new Error("useTodos used outside of Provider");
+  }
+  return todosConsumer;
+};

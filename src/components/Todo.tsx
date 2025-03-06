@@ -4,9 +4,9 @@ import { TodoListToggle } from "./TodoListToggle";
 
 export const Todo = () => {
   return (
-    <section className="border-2 p-4 h-screen">
+    <section className="h-screen bg-[#F5F7FA]">
+      <div className="mb-4 p-4 text-bold text-center bg-green-700 text-white font-semibold">Task Manager</div>
       <div className="w-[80%] m-auto">
-        <div className="mb-4 text-center">ToDo - App</div>
         <TodoListToggle/>
         <AddTodoForm />
         <TodoList />
