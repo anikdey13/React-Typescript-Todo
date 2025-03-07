@@ -1,4 +1,9 @@
-import { createContext, ReactNode, useContext, useState } from "react";
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useState,
+} from "react";
 
 // Types
 export type TodosProviderProps = {
@@ -15,6 +20,8 @@ export type TodosContext = {
   handleAddTask: (task: string) => void;
   handleCompletedTask: (id: string) => void;
   handleDeleteTask: (idx: number) => void;
+  darkMode: boolean;
+  toggleDarkMode: () => void;
 };
 
 // context
@@ -22,14 +29,30 @@ export const todoscontext = createContext<TodosContext | null>(null);
 
 //Provider
 export const TodosProvider = ({ children }: TodosProviderProps) => {
-  const [todos, setTodos] = useState<Todo[]>(()=>{
+  const [todos, setTodos] = useState<Todo[]>(() => {
     try {
-      const newTodos = localStorage.getItem("todos") || "[]"
-      return JSON.parse(newTodos) as Todo[]
+      const newTodos = localStorage.getItem("todos") || "[]";
+      return JSON.parse(newTodos) as Todo[];
     } catch (error) {
-      return []
+      return [];
     }
   });
+
+  // Dark mode
+  const [darkMode, setDarkMode] = useState<boolean>(false);
+
+  // Sync dark mode with the 'dark' class on <html>
+  // useEffect(() => {
+  //   if (darkMode) {
+  //     document.documentElement.classList.add("dark");
+  //   } else {
+  //     document.documentElement.classList.remove("dark");
+  //   }
+  // }, [darkMode]);
+// Toggle Dark mode
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode);
+  };
 
   const handleAddTask = (task: string) => {
     setTodos((prev) => {
@@ -52,23 +75,30 @@ export const TodosProvider = ({ children }: TodosProviderProps) => {
       const newTodos = prev.map((todo) =>
         todo.id === id ? { ...todo, completed: !todo.completed } : todo
       );
-      
+
       localStorage.setItem("todos", JSON.stringify(newTodos));
       return newTodos;
     });
   };
 
   const handleDeleteTask = (idx: number) => {
-    setTodos((prev)=>{
-      const newTodos = prev.filter((_,i)=> i !== idx);
-      localStorage.setItem("todos",JSON.stringify(newTodos));
+    setTodos((prev) => {
+      const newTodos = prev.filter((_, i) => i !== idx);
+      localStorage.setItem("todos", JSON.stringify(newTodos));
       return newTodos;
     });
   };
 
   return (
     <todoscontext.Provider
-      value={{ todos, handleAddTask, handleCompletedTask, handleDeleteTask }}
+      value={{
+        todos,
+        handleAddTask,
+        handleCompletedTask,
+        handleDeleteTask,
+        darkMode,
+        toggleDarkMode,
+      }}
     >
       {children}
     </todoscontext.Provider>

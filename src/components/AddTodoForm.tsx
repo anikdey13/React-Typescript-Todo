@@ -18,7 +18,7 @@ export const AddTodoForm = () => {
           value={todo}
           onChange={(e) => setTodo(e.target.value)}
           placeholder="Task name"
-          className="p-2 rounded-sm mr-2 w-4/5 shadow-[0_3px_10px_rgb(0,0,0,0.2)]"
+          className="p-2 rounded-sm mr-2 w-4/5 shadow-[0_3px_10px_rgb(0,0,0,0.2)] dark:bg-white text-[#000]"
         />
         <button type="submit"
           className="border-1 py-2 px-4 rounded-sm bg-green-500 text-white"

@@ -26,7 +26,7 @@ export const TodoList = () => {
           return (
             <li
               key={todo.id}
-              className="flex justify-between px-4 py-2 bg-[#FFF] text-[#2D3748] rounded-sm mb-4 shadow-[0_3px_10px_rgb(0,0,0,0.2)]"
+              className="flex justify-between px-4 py-2 bg-[#FFF] dark:bg-[#1E3E62] dark:text-white transition-colors text-[#2D3748] rounded-sm mb-4 shadow-[0_3px_10px_rgb(0,0,0,0.2)]"
             >
               <div className="flex gap-2">
                 <button onClick={() => handleCompletedTask(todo.id)}>
@@ -41,7 +41,7 @@ export const TodoList = () => {
                <span className={isCompleted ? `line-through`: ""}> {todo.task}</span>
               </div>
               <button onClick={()=> handleDeleteTask(idx)}>
-                <MdDelete size={25} color="red" />
+                <MdDelete size={25} color="#FF6500" />
               </button>
             </li>
           );
